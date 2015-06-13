@@ -13,8 +13,8 @@ var Tonu = function() {
             } else {
                 title = site.title;
             }
-            if(title.length > 150) {
-                title = title.substring(0,145)+"...";
+            if(title.length > 100) {
+                title = title.substring(0,95)+"...";
             }
 
             $h4 = $('<h4/>', { "class": "site-title" });
@@ -22,7 +22,11 @@ var Tonu = function() {
             $h4.append($a);
             $div.append($h4);
 
-            $url = $('<div/>', { "html": site.url, "class": "site-url" });
+            var siteUrl = site.url;
+            if(siteUrl.length > 100) {
+                siteUrl = siteUrl.substring(0,95)+"...";
+            }
+            $url = $('<div/>', { "html": siteUrl, "class": "site-url" });
             $div.append($url);
 
             var body;

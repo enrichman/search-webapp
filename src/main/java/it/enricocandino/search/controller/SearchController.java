@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -128,7 +129,7 @@ public class SearchController {
     ) throws Exception {
 
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet("http://localhost:8983/solr/warc_core/suggest?wt=json&q="+q);
+        HttpGet request = new HttpGet("http://localhost:8983/solr/warc_core/suggest?wt=json&q="+ URLEncoder.encode(q, "UTF-8"));
         HttpResponse response = client.execute(request);
         String json = EntityUtils.toString(response.getEntity());
 

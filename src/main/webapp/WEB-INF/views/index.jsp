@@ -160,7 +160,7 @@
     $(function() {
 
         $("#eventBroker").on('page.click', function(evt, page) {
-            var value = $('.queryInput').val();
+            var value = $('#navQueryInput').typeahead('val');
             query(value, page);
         });
 
@@ -231,6 +231,7 @@
             var value = $input.val();
 
             $('.queryInput').val(value);
+            $('#navQueryInput').typeahead('val', value);
 
             search(value);
         });
