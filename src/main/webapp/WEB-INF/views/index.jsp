@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css">
+    <link rel="stylesheet" href="../css/typeahead.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -147,6 +148,8 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+<script src="http://twitter.github.com/typeahead.js/releases/latest/typeahead.bundle.min.js"></script>
+
 
 
 <script src="../js/tonu.js"></script>
@@ -234,14 +237,39 @@
 
         $('.sugg').on('click', function() {
             var value = $(this).text();
-            $('.queryInput').val(value);
+            $('#navQueryInput').typeahead('val', value);
 
             search(value);
         });
 
         $('#safeInput').on('change', function() {
-            var value = $('.queryInput').val();
+            var value = $('#navQueryInput').typeahead('val');
             search(value);
+        });
+
+        // Instantiate the Bloodhound suggestion engine
+        var suggestions = new Bloodhound({
+            datumTokenizer: function (datum) {
+                return Bloodhound.tokenizers.whitespace(datum.value);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/rest/suggest?q=',
+                replace: function(url, query) {
+                    return url + query;
+                }
+            }
+        });
+        // Initialize the Bloodhound suggestion engine
+        suggestions.initialize();
+
+        $navQueryInput = $('#navQueryInput');
+        $navQueryInput.typeahead(null, {
+            displayKey: 'word',
+            source: suggestions.ttAdapter()
+        });
+        $navQueryInput.on('typeahead:select', function(ev, suggestion) {
+            search(suggestion.word);
         });
 
         $("#mainQueryInput").focus();
