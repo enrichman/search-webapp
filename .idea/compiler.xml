@@ -22,8 +22,11 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="bolloauto" />
+        <module name="search" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.8" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="search" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,10 +1,15 @@
 package it.enricocandino.search.controller;
 
-import it.enricocandino.search.model.QueryResult;
-import it.enricocandino.search.model.QuerySite;
-import it.enricocandino.search.model.User;
-import it.enricocandino.search.model.UserSession;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.enricocandino.search.model.*;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
@@ -18,18 +23,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Enrico Candino
  */
 @RestController
-@RequestMapping(value = "/rest/search")
+@RequestMapping(value = "/rest")
 public class SearchController {
 
     @Autowired
     private UserSession userSession;
 
-    @RequestMapping
+    @RequestMapping(value = "/search")
     public ResponseEntity<QueryResult> getUser(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Boolean safe,
@@ -44,7 +51,6 @@ public class SearchController {
 
         SolrClient solrClient = new HttpSolrClient("http://localhost:8983/solr/warc_core");
 
-        // http://localhost:8983/solr/spellCheckCompRH?q=epod&spellcheck=on&spellcheck.build=true
         ModifiableSolrParams params = new ModifiableSolrParams();
         //params.set("qt", "query");
 
@@ -114,6 +120,32 @@ public class SearchController {
         userSession.setPage(page);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/suggest")
+    public ResponseEntity<Set<Suggestion>> getUser(
+            @RequestParam String q
+    ) throws Exception {
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet("http://localhost:8983/solr/warc_core/suggest?wt=json&q="+q);
+        HttpResponse response = client.execute(request);
+        String json = EntityUtils.toString(response.getEntity());
+
+        Set<Suggestion> suggestionList = new TreeSet<>();
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(json);
+        JsonNode suggestions = root.get("suggest").get("suggestQuery").get(q).get("suggestions");
+        for(JsonNode sugg : suggestions) {
+            Suggestion suggestion = new Suggestion();
+            suggestion.setWord(sugg.get("term").textValue());
+            Integer weight = q.equals(suggestion.getWord()) ? null : sugg.get("weight").asInt();
+            suggestion.setWeight(weight);
+            suggestionList.add(suggestion);
+        }
+
+        return new ResponseEntity<>(suggestionList, HttpStatus.OK);
     }
 
 }
