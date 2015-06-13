@@ -29,9 +29,10 @@ public class SearchController {
     @Autowired
     private UserSession userSession;
 
-    @RequestMapping(value = "/{query}", method = RequestMethod.GET)
+    @RequestMapping
     public ResponseEntity<QueryResult> getUser(
-            @PathVariable String query,
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) Boolean safe,
             @RequestParam(required = false) Integer page
     ) throws Exception {
 
@@ -45,12 +46,18 @@ public class SearchController {
 
         // http://localhost:8983/solr/spellCheckCompRH?q=epod&spellcheck=on&spellcheck.build=true
         ModifiableSolrParams params = new ModifiableSolrParams();
-        params.set("qt", "query");
-        params.set("q", query);
+        //params.set("qt", "query");
+
+        if(!safe)
+            params.set("q", q);
+        else
+            params.set("q", "safe:true AND "+q);
+
+        params.set("defType", "edismax");
         params.set("start", start);
 
         params.set("spellcheck", "on");
-        params.set("spellcheck.q", query);
+        params.set("spellcheck.q", q);
 
         params.set("hl", "on");
         params.set("hl.simple.pre", "<em>");
@@ -64,7 +71,7 @@ public class SearchController {
 
         QueryResult result = new QueryResult();
 
-        result.setQ(query);
+        result.setQ(q);
         result.setqTime(response.getQTime());
         result.setNumFound(response.getResults().getNumFound());
 
@@ -94,14 +101,16 @@ public class SearchController {
 
         result.setQuerySites(sites);
 
-        List<SpellCheckResponse.Suggestion> suggestions = response.getSpellCheckResponse().getSuggestions();
-        if(suggestions != null) {
-            for(SpellCheckResponse.Suggestion suggestion : suggestions) {
-                result.setSuggestions(suggestion.getAlternatives());
+        if(response.getSpellCheckResponse() != null) {
+            List<SpellCheckResponse.Suggestion> suggestions = response.getSpellCheckResponse().getSuggestions();
+            if (suggestions != null) {
+                for (SpellCheckResponse.Suggestion suggestion : suggestions) {
+                    result.setSuggestions(suggestion.getAlternatives());
+                }
             }
         }
 
-        userSession.setQuery(query);
+        userSession.setQuery(q);
         userSession.setPage(page);
 
         return new ResponseEntity<>(result, HttpStatus.OK);

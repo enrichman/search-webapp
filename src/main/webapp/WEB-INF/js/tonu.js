@@ -13,6 +13,9 @@ var Tonu = function() {
             } else {
                 title = site.title;
             }
+            if(title.length > 150) {
+                title = title.substring(0,145)+"...";
+            }
 
             $h4 = $('<h4/>', { "class": "site-title" });
             $a = $('<a/>', { "href": site.url, "html": title, "target": "_blank" });
@@ -25,9 +28,15 @@ var Tonu = function() {
             var body;
             if(site.highlights != null && site.highlights.length > 0) {
                 body = site.highlights[0];
+                if(site.highlights.length > 1)
+                    console.log("lungooooo");
             } else {
                 body = site.body;
             }
+            if(body.length > 300) {
+                body = body.substring(0,295)+"...";
+            }
+
             $highlight = $('<div/>', { "html": body });
             $div.append($highlight);
 

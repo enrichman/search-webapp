@@ -87,7 +87,7 @@
                         <input type="text" class="form-control queryInput" id="navQueryInput" placeholder="Looking for..">
                     </div>
 
-                    <input type="checkbox" checked data-toggle="toggle"
+                    <input id="safeInput" type="checkbox" checked data-toggle="toggle"
                            data-on="Safe" data-off="Not safe"
                            data-onstyle="success" data-offstyle="danger" >
 
@@ -164,12 +164,14 @@
         function query(value, page) {
             $("#results").empty();
 
+            var safe = $("#safeInput").is(":checked");
+
             if(!page)
                 page = 1;
 
             $.ajax({
-                url: "rest/search/"+value,
-                data: { page: page }
+                url: "rest/search",
+                data: { q: value, safe: safe, page: page }
             }).done(function(json) {
 
                 if(!!json.suggestions) {
@@ -234,6 +236,11 @@
             var value = $(this).text();
             $('.queryInput').val(value);
 
+            search(value);
+        });
+
+        $('#safeInput').on('change', function() {
+            var value = $('.queryInput').val();
             search(value);
         });
 
