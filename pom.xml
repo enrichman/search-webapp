@@ -67,13 +67,6 @@
             <version>3.2.6.RELEASE</version>
         </dependency>
 
-        <!-- SPRING DATA Mongo -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>1.7.0.RELEASE</version>
-        </dependency>
-
         <!--(de)serialization-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
@@ -53,26 +52,14 @@ public class SearchController {
         SolrClient solrClient = new HttpSolrClient("http://localhost:8983/solr/warc_core");
 
         ModifiableSolrParams params = new ModifiableSolrParams();
-        //params.set("qt", "query");
 
         if(!safe)
             params.set("q", q);
         else
             params.set("q", "safe:true AND "+q);
 
-        params.set("defType", "edismax");
         params.set("start", start);
-
-        params.set("spellcheck", "on");
         params.set("spellcheck.q", q);
-
-        params.set("hl", "on");
-        params.set("hl.simple.pre", "<em>");
-        params.set("hl.simple.post", "</em>");
-        params.set("hl.usePhraseHighlighter", "on");
-
-        params.set("qf", "text^0.5 title^10.0");
-
 
         QueryResponse response = solrClient.query(params);
 

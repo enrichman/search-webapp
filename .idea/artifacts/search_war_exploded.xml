@@ -24,10 +24,6 @@
           <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
           <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:3.2.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:3.2.6.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-mongodb:1.7.0.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.0.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-commons:1.10.0.RELEASE" />
-          <element id="library" level="project" name="Maven: org.mongodb:mongo-java-driver:2.13.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.1" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.1" />
