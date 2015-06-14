@@ -32,8 +32,6 @@ var Tonu = function() {
             var body;
             if(site.highlights != null && site.highlights.length > 0) {
                 body = site.highlights[0];
-                if(site.highlights.length > 1)
-                    console.log("lungooooo");
             } else {
                 body = site.body;
             }
