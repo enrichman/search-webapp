@@ -91,7 +91,6 @@
                     <input id="safeInput" type="checkbox" checked data-toggle="toggle"
                            data-on="Safe" data-off="Not safe"
                            data-onstyle="success" data-offstyle="danger" >
-
                 </div>
             </form>
         </div><!--/.nav-collapse -->
@@ -104,13 +103,14 @@
     <div class="row vertical-center-row">
         <div class="col-lg-12" id="mainQuery">
             <div class="row text-center">
-                <img src="../img/logo.jpg" />
+                <img src="../img/delight.jpg" />
             </div>
             <div class="row ">
-                <div class="col-xs-4 col-xs-offset-4">
+                <div class="col-xs-4 col-xs-offset-3">
                     <form>
                         <div class="form-group">
-                            <input type="text" class="form-control queryInput" id="mainQueryInput" placeholder="Looking for..">
+                            <input type="text" class="form-control queryInput" id="mainQueryInput"
+                                   placeholder="Looking for.." style="margin-top: 20px; width: 500px;">
                         </div>
                     </form>
                 </div>
